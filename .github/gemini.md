@@ -57,10 +57,3 @@ Voor *elke* entiteit in dit project moet de volgende functionaliteit gebouwd wor
 4.  **DELETE (Verwijderen)**
     * *Happy flow:* Record wordt veilig verwijderd. Succesmelding.
     * *Unhappy flow:* Verwijderen wordt geblokkeerd door actieve afhankelijkheden in de database.
-
-## 🌿 Versiebeheer (Git) Instructies voor de AI
-*Als je git-commando's of branch-strategieën suggereert, houd je dan aan de volgende flow:*
-* Gebruik een `main` branch voor productie-ready code.
-* Gebruik een `dev` branch voor actieve integratie.
-* Gebruik `feature/...` branches voor het ontwikkelen van specifieke user stories.
-* Commits moeten kleine, logische stappen zijn met duidelijke, beschrijvende commit messages.
