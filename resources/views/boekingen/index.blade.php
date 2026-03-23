@@ -60,7 +60,7 @@
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
-                                        <button class="text-indigo-400 hover:text-indigo-300 font-medium">Beheer</button>
+                                        <a href="{{ route('boekingen.edit', $boeking->id) }}" class="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">Bewerken</a>
                                     </td>
                                 </tr>
                             @empty

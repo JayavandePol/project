@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreBoekingRequest extends FormRequest
+class UpdateBoekingRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -18,7 +18,7 @@ class StoreBoekingRequest extends FormRequest
             'reis_id' => 'required|exists:reizen,id',
             'accommodatie_id' => 'required|exists:accommodaties,id',
             'num_people' => 'required|integer|min:1',
-            'booking_date' => 'required|date|after_or_equal:today',
+            'booking_date' => 'required|date',
             'status' => 'required|string|in:pending,confirmed,cancelled',
         ];
     }

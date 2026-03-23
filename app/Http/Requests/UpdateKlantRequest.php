@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreKlantRequest extends FormRequest
+class UpdateKlantRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -15,7 +15,7 @@ class StoreKlantRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:klanten,email|max:255',
+            'email' => 'required|email|unique:klanten,email,' . $this->route('id'),
             'phone' => 'nullable|string|max:20',
             'address' => 'required|string',
             'postal_code' => ['required', 'string', 'regex:/^[0-9]{4}\s?[A-Z]{2}$/i'],

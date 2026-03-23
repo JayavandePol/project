@@ -60,15 +60,23 @@
                             @error('booking_date') <p class="mt-2 text-sm text-red-500">{{ $message }}</p> @enderror
                         </div>
 
-                        <div>
-                            <label for="status" class="block text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Status</label>
-                            <select name="status" id="status" required
-                                class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all duration-200">
-                                <option value="pending" {{ old('status') == 'pending' ? 'selected' : '' }}>In afwachting (Pending)</option>
-                                <option value="confirmed" {{ old('status', 'confirmed') == 'confirmed' ? 'selected' : '' }}>Bevestigd (Confirmed)</option>
-                                <option value="cancelled" {{ old('status') == 'cancelled' ? 'selected' : '' }}>Geannuleerd (Cancelled)</option>
-                            </select>
-                            @error('status') <p class="mt-2 text-sm text-red-500">{{ $message }}</p> @enderror
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="num_people" class="block text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Aantal Personen</label>
+                                <input type="number" name="num_people" id="num_people" value="{{ old('num_people', 1) }}" min="1" required
+                                    class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all duration-200">
+                                @error('num_people') <p class="mt-2 text-sm text-red-500">{{ $message }}</p> @enderror
+                            </div>
+                            <div>
+                                <label for="status" class="block text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Status</label>
+                                <select name="status" id="status" required
+                                    class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all duration-200">
+                                    <option value="pending" {{ old('status') == 'pending' ? 'selected' : '' }}>In afwachting</option>
+                                    <option value="confirmed" {{ old('status', 'confirmed') == 'confirmed' ? 'selected' : '' }}>Bevestigd</option>
+                                    <option value="cancelled" {{ old('status') == 'cancelled' ? 'selected' : '' }}>Geannuleerd</option>
+                                </select>
+                                @error('status') <p class="mt-2 text-sm text-red-500">{{ $message }}</p> @enderror
+                            </div>
                         </div>
 
                         <div class="p-6 bg-slate-900/30 rounded-2xl border border-slate-700/30">
@@ -99,6 +107,7 @@
                 const klant = document.getElementById('klant_id').value;
                 const reis = document.getElementById('reis_id').value;
                 const acc = document.getElementById('accommodatie_id').value;
+                const numPeople = document.getElementById('num_people').value;
 
                 if (!klant || !reis || !acc) {
                     e.preventDefault();
@@ -106,8 +115,14 @@
                     return;
                 }
 
+                if (numPeople < 1) {
+                    e.preventDefault();
+                    alert('Aantal personen moet minimaal 1 zijn.');
+                    return;
+                }
+
                 submitBtn.disabled = true;
-                submitBtn.innerHTML = 'Bevestigen...';
+                submitBtn.innerHTML = '<svg class="animate-spin h-5 w-5 mr-3 text-white inline-block" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle class="opacity-25" cx="12" cy="12" r="10" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Bevestigen...';
             });
         });
     </script>

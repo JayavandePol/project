@@ -19,4 +19,20 @@ class FactuurController extends Controller
             return back()->with('error', 'Er is een fout opgetreden bij het laden van de facturen.');
         }
     }
+
+    public function updateStatus(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'status' => 'required|in:unpaid,paid,cancelled',
+            ]);
+
+            DB::statement("CALL UpdateFactuurStatus(?, ?)", [$id, $request->status]);
+
+            return back()->with('success', 'Factuurstatus succesvol bijgewerkt via Stored Procedure.');
+        } catch (\Exception $e) {
+            Log::error('Fout bij het bijwerken van factuurstatus via SP: ' . $e->getMessage());
+            return back()->with('error', 'Er is een fout opgetreden bij het bijwerken van de factuurstatus.');
+        }
+    }
 }

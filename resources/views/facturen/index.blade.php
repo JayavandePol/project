@@ -48,12 +48,17 @@
                                         {{ \Carbon\Carbon::parse($factuur->due_date)->format('d-m-Y') }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right">
-                                        <span class="px-3 py-1 text-xs font-bold rounded-full 
-                                            {{ $factuur->status === 'paid' ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 
-                                               ($factuur->status === 'unpaid' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 
-                                               'bg-red-500/10 text-red-400 border border-red-500/20') }}">
-                                            {{ ucfirst($factuur->status) }}
-                                        </span>
+                                        <form action="{{ route('facturen.updateStatus', $factuur->id) }}" method="POST">
+                                            @csrf
+                                            @method('PATCH')
+                                            <select name="status" onchange="this.form.submit()" 
+                                                class="bg-slate-900/50 border border-slate-700 text-xs font-bold rounded-lg px-3 py-1.5 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all
+                                                {{ $factuur->status === 'paid' ? 'text-green-400' : ($factuur->status === 'unpaid' ? 'text-amber-400' : 'text-red-400') }}">
+                                                <option value="unpaid" {{ $factuur->status === 'unpaid' ? 'selected' : '' }}>Onbetaald</option>
+                                                <option value="paid" {{ $factuur->status === 'paid' ? 'selected' : '' }}>Betaald</option>
+                                                <option value="cancelled" {{ $factuur->status === 'cancelled' ? 'selected' : '' }}>Geannuleerd</option>
+                                            </select>
+                                        </form>
                                     </td>
                                 </tr>
                             @empty

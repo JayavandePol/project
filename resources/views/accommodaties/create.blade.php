@@ -34,18 +34,38 @@
                             <select name="type" id="type" required
                                 class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all duration-200 appearance-none">
                                 <option value="Hotel" {{ old('type') == 'Hotel' ? 'selected' : '' }}>Hotel</option>
-                                <option value="B&B" {{ old('type') == 'B&B' ? 'selected' : '' }}>B&B</option>
-                                <option value="Camping" {{ old('type') == 'Camping' ? 'selected' : '' }}>Camping</option>
                                 <option value="Appartement" {{ old('type') == 'Appartement' ? 'selected' : '' }}>Appartement</option>
+                                <option value="Resort" {{ old('type') == 'Resort' ? 'selected' : '' }}>Resort</option>
+                                <option value="Camping" {{ old('type') == 'Camping' ? 'selected' : '' }}>Camping</option>
+                                <option value="Anders" {{ old('type') == 'Anders' ? 'selected' : '' }}>Anders</option>
                             </select>
                             @error('type') <p class="mt-2 text-sm text-red-500">{{ $message }}</p> @enderror
                         </div>
                         <div>
-                            <label for="price_per_night" class="block text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Prijs per nacht (&euro;)</label>
-                            <input type="number" step="0.01" name="price_per_night" id="price_per_night" value="{{ old('price_per_night') }}" required
+                            <label for="rating" class="block text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Rating (Sterren)</label>
+                            <select name="rating" id="rating" required
                                 class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all duration-200">
-                            @error('price_per_night') <p class="mt-2 text-sm text-red-500">{{ $message }}</p> @enderror
+                                @for($i = 1; $i <= 5; $i++)
+                                    <option value="{{ $i }}" {{ old('rating', 3) == $i ? 'selected' : '' }}>{{ $i }} Ster{{ $i > 1 ? 'ren' : '' }}</option>
+                                @endfor
+                            </select>
+                            @error('rating') <p class="mt-2 text-sm text-red-500">{{ $message }}</p> @enderror
                         </div>
+                    </div>
+
+                    <div>
+                        <label for="amenities" class="block text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Voorzieningen (Amenities)</label>
+                        <textarea name="amenities" id="amenities" rows="3"
+                            class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all duration-200"
+                            placeholder="Bijv. WiFi, Zwembad, Ontbijt inbegrepen...">{{ old('amenities') }}</textarea>
+                        @error('amenities') <p class="mt-2 text-sm text-red-500">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div>
+                        <label for="price_per_night" class="block text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Prijs per nacht (&euro;)</label>
+                        <input type="number" step="0.01" name="price_per_night" id="price_per_night" value="{{ old('price_per_night') }}" required
+                            class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all duration-200">
+                        @error('price_per_night') <p class="mt-2 text-sm text-red-500">{{ $message }}</p> @enderror
                     </div>
                 </div>
 
@@ -66,6 +86,14 @@
 
             form.addEventListener('submit', function(e) {
                 const price = document.getElementById('price_per_night').value;
+                const name = document.getElementById('name').value.trim();
+                const location = document.getElementById('location').value.trim();
+
+                if (!name || !location) {
+                    e.preventDefault();
+                    alert('Naam and locatie zijn verplicht.');
+                    return;
+                }
 
                 if (price < 0) {
                     e.preventDefault();
@@ -74,7 +102,7 @@
                 }
 
                 submitBtn.disabled = true;
-                submitBtn.innerHTML = 'Opslaan...';
+                submitBtn.innerHTML = '<svg class="animate-spin h-5 w-5 mr-3 text-white inline-block" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle class="opacity-25" cx="12" cy="12" r="10" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Opslaan...';
             });
         });
     </script>

@@ -46,7 +46,7 @@
                                 <span class="text-[10px] uppercase font-bold text-slate-500 tracking-wider">Datum</span>
                                 <span class="text-xs text-slate-300">{{ \Carbon\Carbon::parse($reis->start_date)->format('d M') }} - {{ \Carbon\Carbon::parse($reis->end_date)->format('d M Y') }}</span>
                             </div>
-                            <button class="text-indigo-400 hover:text-indigo-300 text-sm font-medium transition-colors">Bekijken</button>
+                            <a href="{{ route('reizen.edit', $reis->id) }}" class="text-indigo-400 hover:text-indigo-300 text-sm font-medium transition-colors">Bewerken</a>
                         </div>
                     </div>
                 </div>

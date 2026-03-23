@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreReisRequest extends FormRequest
+class UpdateReisRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -19,7 +19,7 @@ class StoreReisRequest extends FormRequest
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
             'max_participants' => 'required|integer|min:1',
-            'start_date' => 'required|date|after_or_equal:today',
+            'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
         ];
     }
@@ -35,7 +35,6 @@ class StoreReisRequest extends FormRequest
             'max_participants.required' => 'Maximaal aantal deelnemers is verplicht.',
             'max_participants.integer' => 'Aantal deelnemers moet een geheel getal zijn.',
             'start_date.required' => 'Begindatum is verplicht.',
-            'start_date.after_or_equal' => 'Begindatum mag niet in het verleden liggen.',
             'end_date.required' => 'Einddatum is verplicht.',
             'end_date.after' => 'Einddatum moet na de begindatum liggen.',
         ];

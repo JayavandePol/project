@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 use App\Models\User;
 use App\Http\Requests\StoreUserRequest;
-use Illuminate\Support\Facades\DB;
+use App\Http\Requests\UpdateUserRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Exception;
 
 class AdminUserController extends Controller
 {
@@ -46,17 +45,57 @@ class AdminUserController extends Controller
         }
     }
 
-    public function updateRole(Request $request, User $user)
+    public function edit($id)
     {
-        $request->validate([
-            'role' => 'required|string|in:admin,user',
-        ]);
-
         try {
-            DB::unprepared('CALL update_user_role(' . $user->id . ', \'' . $request->role . '\')');
-            return back()->with('success', 'User role updated successfully.');
-        } catch (Exception $e) {
-            return back()->with('error', 'Failed to update user role: ' . $e->getMessage());
+            $userResult = DB::select("CALL GetUserById(?)", [$id]);
+            $user = $userResult[0] ?? abort(404);
+            return view('admin.users.edit', compact('user'));
+        } catch (\Exception $e) {
+            Log::error('Fout bij het ophalen van user voor bewerken: ' . $e->getMessage());
+            return redirect()->route('admin.users.index')->with('error', 'User niet gevonden.');
+        }
+    }
+
+    public function update(UpdateUserRequest $request, $id)
+    {
+        try {
+            DB::statement("CALL UpdateUser(?, ?, ?, ?)", [
+                $id,
+                $request->name,
+                $request->email,
+                $request->role
+            ]);
+            return redirect()->route('admin.users.index')->with('success', 'User succesvol gewijzigd via Stored Procedure!');
+        } catch (\Exception $e) {
+            Log::error('Fout bij het wijzigen van user via SP: ' . $e->getMessage());
+            return back()->withInput()->with('error', 'Er is een fout opgetreden bij het wijzigen van de user.');
+        }
+    }
+
+    public function updateRole(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'role' => 'required|in:admin,user',
+            ]);
+
+            // We use UpdateUser but only changing the role. The SP requires ID, Name, Email, Role.
+            // We need to fetch the user first to get their existing name and email.
+            $userResult = DB::select("CALL GetUserById(?)", [$id]);
+            $user = $userResult[0] ?? abort(404);
+
+            DB::statement("CALL UpdateUser(?, ?, ?, ?)", [
+                $id,
+                $user->name,
+                $user->email,
+                $request->role
+            ]);
+
+            return back()->with('success', 'Gebruikersrol succesvol bijgewerkt via Stored Procedure.');
+        } catch (\Exception $e) {
+            Log::error('Fout bij het bijwerken van gebruikersrol via SP: ' . $e->getMessage());
+            return back()->with('error', 'Er is een fout opgetreden bij het bijwerken van de gebruikersrol.');
         }
     }
 }

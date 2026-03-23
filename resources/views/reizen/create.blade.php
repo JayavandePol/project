@@ -20,12 +20,21 @@
                 @csrf
 
                 <div class="space-y-6">
-                    <div>
-                        <label for="title" class="block text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Titel van de Reis</label>
-                        <input type="text" name="title" id="title" value="{{ old('title') }}" required
-                            class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all duration-200 placeholder-slate-600"
-                            placeholder="Bijv. Zonnig Spanje Extra">
-                        @error('title') <p class="mt-2 text-sm text-red-500">{{ $message }}</p> @enderror
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="title" class="block text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Titel van de Reis</label>
+                            <input type="text" name="title" id="title" value="{{ old('title') }}" required
+                                class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all duration-200 placeholder-slate-600"
+                                placeholder="Bijv. Zonnig Spanje Extra">
+                            @error('title') <p class="mt-2 text-sm text-red-500">{{ $message }}</p> @enderror
+                        </div>
+                        <div>
+                            <label for="destination" class="block text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Bestemming</label>
+                            <input type="text" name="destination" id="destination" value="{{ old('destination') }}" required
+                                class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all duration-200 placeholder-slate-600"
+                                placeholder="Bijv. Madrid, Spanje">
+                            @error('destination') <p class="mt-2 text-sm text-red-500">{{ $message }}</p> @enderror
+                        </div>
                     </div>
 
                     <div>
@@ -42,6 +51,12 @@
                             <input type="number" step="0.01" name="price" id="price" value="{{ old('price') }}" required
                                 class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all duration-200 placeholder-slate-600">
                             @error('price') <p class="mt-2 text-sm text-red-500">{{ $message }}</p> @enderror
+                        </div>
+                        <div>
+                            <label for="max_participants" class="block text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Max. Deelnemers</label>
+                            <input type="number" name="max_participants" id="max_participants" value="{{ old('max_participants', 20) }}" required
+                                class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all duration-200">
+                            @error('max_participants') <p class="mt-2 text-sm text-red-500">{{ $message }}</p> @enderror
                         </div>
                         <div>
                             <label for="start_date" class="block text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Startdatum</label>

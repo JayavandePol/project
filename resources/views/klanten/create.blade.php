@@ -38,20 +38,36 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
+                            <label for="postal_code" class="block text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Postcode</label>
+                            <input type="text" name="postal_code" id="postal_code" value="{{ old('postal_code') }}" required
+                                class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all duration-200 placeholder-slate-600"
+                                placeholder="1234 AB">
+                            @error('postal_code') <p class="mt-2 text-sm text-red-500">{{ $message }}</p> @enderror
+                        </div>
+                        <div>
+                            <label for="city" class="block text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Stad</label>
+                            <input type="text" name="city" id="city" value="{{ old('city') }}" required
+                                class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all duration-200 placeholder-slate-600"
+                                placeholder="Amsterdam">
+                            @error('city') <p class="mt-2 text-sm text-red-500">{{ $message }}</p> @enderror
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
                             <label for="phone" class="block text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Telefoonnummer</label>
                             <input type="text" name="phone" id="phone" value="{{ old('phone') }}"
                                 class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all duration-200 placeholder-slate-600"
                                 placeholder="0612345678">
                             @error('phone') <p class="mt-2 text-sm text-red-500">{{ $message }}</p> @enderror
                         </div>
-                    </div>
-
-                    <div>
-                        <label for="address" class="block text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Adres</label>
-                        <textarea name="address" id="address" rows="3"
-                            class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all duration-200 placeholder-slate-600"
-                            placeholder="Straatnaam 1, 1234 AB Stad">{{ old('address') }}</textarea>
-                        @error('address') <p class="mt-2 text-sm text-red-500">{{ $message }}</p> @enderror
+                        <div>
+                            <label for="address" class="block text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Adres</label>
+                            <input type="text" name="address" id="address" value="{{ old('address') }}" required
+                                class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all duration-200 placeholder-slate-600"
+                                placeholder="Straatnaam 1">
+                            @error('address') <p class="mt-2 text-sm text-red-500">{{ $message }}</p> @enderror
+                        </div>
                     </div>
                 </div>
 
@@ -73,8 +89,13 @@
             form.addEventListener('submit', function(e) {
                 const name = document.getElementById('name').value.trim();
                 const email = document.getElementById('email').value.trim();
+                const postalCode = document.getElementById('postal_code').value.trim();
+                const city = document.getElementById('city').value.trim();
+                const address = document.getElementById('address').value.trim();
 
-                if (!name || !email) {
+                const pcRegex = /^[0-9]{4}\s?[A-Z]{2}$/i;
+
+                if (!name || !email || !postalCode || !city || !address) {
                     e.preventDefault();
                     alert('Vul alstublieft alle verplichte velden in.');
                     return;
@@ -86,8 +107,14 @@
                     return;
                 }
 
+                if (!pcRegex.test(postalCode)) {
+                    e.preventDefault();
+                    alert('Voer een geldige Nederlandse postcode in (bijv. 1234 AB).');
+                    return;
+                }
+
                 submitBtn.disabled = true;
-                submitBtn.innerHTML = '<svg class="animate-spin h-5 w-5 mr-3 text-white inline" viewBox="0 0 24 24">...</svg> Verwerken...';
+                submitBtn.innerHTML = '<svg class="animate-spin h-5 w-5 mr-3 text-white inline-block" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle class="opacity-25" cx="12" cy="12" r="10" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Verwerken...';
             });
         });
     </script>

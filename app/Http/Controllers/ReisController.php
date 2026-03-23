@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Reis;
 use App\Http\Requests\StoreReisRequest;
+use App\Http\Requests\UpdateReisRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
@@ -29,10 +30,12 @@ class ReisController extends Controller
     public function store(StoreReisRequest $request)
     {
         try {
-            DB::statement("CALL InsertReis(?, ?, ?, ?, ?)", [
+            DB::statement("CALL InsertReis(?, ?, ?, ?, ?, ?, ?)", [
                 $request->title,
+                $request->destination,
                 $request->description,
                 $request->price,
+                $request->max_participants,
                 $request->start_date,
                 $request->end_date
             ]);
@@ -40,6 +43,38 @@ class ReisController extends Controller
         } catch (\Exception $e) {
             Log::error('Fout bij het opslaan van reis via SP: ' . $e->getMessage());
             return back()->withInput()->with('error', 'Er is een fout opgetreden bij het opslaan van de reis.');
+        }
+    }
+
+    public function edit($id)
+    {
+        try {
+            $reisResult = DB::select("CALL GetReisById(?)", [$id]);
+            $reis = $reisResult[0] ?? abort(404);
+            return view('reizen.edit', compact('reis'));
+        } catch (\Exception $e) {
+            Log::error('Fout bij het ophalen van reis voor bewerken: ' . $e->getMessage());
+            return redirect()->route('reizen.index')->with('error', 'Reis niet gevonden.');
+        }
+    }
+
+    public function update(UpdateReisRequest $request, $id)
+    {
+        try {
+            DB::statement("CALL UpdateReis(?, ?, ?, ?, ?, ?, ?, ?)", [
+                $id,
+                $request->title,
+                $request->destination,
+                $request->description,
+                $request->price,
+                $request->max_participants,
+                $request->start_date,
+                $request->end_date
+            ]);
+            return redirect()->route('reizen.index')->with('success', 'Reis succesvol gewijzigd via Stored Procedure!');
+        } catch (\Exception $e) {
+            Log::error('Fout bij het wijzigen van reis via SP: ' . $e->getMessage());
+            return back()->withInput()->with('error', 'Er is een fout opgetreden bij het wijzigen van de reis.');
         }
     }
 }

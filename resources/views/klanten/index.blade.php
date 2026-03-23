@@ -48,7 +48,7 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-slate-400 text-sm">{{ $klant->phone ?? '-' }}</td>
                                     <td class="px-6 py-4 text-slate-400 text-sm max-w-xs truncate">{{ $klant->address ?? '-' }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right">
-                                        <button class="text-indigo-400 hover:text-indigo-300 text-sm font-medium transition-colors">Details</button>
+                                        <a href="{{ route('klanten.edit', $klant->id) }}" class="text-indigo-400 hover:text-indigo-300 text-sm font-medium transition-colors">Bewerken</a>
                                     </td>
                                 </tr>
                             @empty

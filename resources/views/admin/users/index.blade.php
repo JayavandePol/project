@@ -54,17 +54,20 @@
                                         {{ $user->created_at->format('M d, Y') }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right">
-                                        <form action="{{ route('admin.users.updateRole', $user) }}" method="POST" class="inline-flex items-center space-x-2">
-                                            @csrf
-                                            @method('PATCH')
-                                            <select name="role" class="bg-slate-900/50 border border-slate-700 text-slate-300 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block p-2 transition-all duration-200 hover:border-slate-600">
-                                                <option value="user" {{ $user->role === 'user' ? 'selected' : '' }}>User</option>
-                                                <option value="admin" {{ $user->role === 'admin' ? 'selected' : '' }}>Admin</option>
-                                            </select>
-                                            <button type="submit" class="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white text-sm font-medium rounded-lg shadow-lg shadow-indigo-500/20 transition-all duration-200 transform hover:-translate-y-0.5">
-                                                Save
-                                            </button>
-                                        </form>
+                                        <div class="flex items-center justify-end space-x-4">
+                                            <a href="{{ route('admin.users.edit', $user->id) }}" class="text-indigo-400 hover:text-indigo-300 text-sm font-medium transition-colors">Bewerken</a>
+                                            <form action="{{ route('admin.users.updateRole', $user->id ?? $user->id) }}" method="POST" class="inline-flex items-center space-x-2">
+                                                @csrf
+                                                @method('PATCH')
+                                                <select name="role" class="bg-slate-900/50 border border-slate-700 text-slate-300 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block p-2 transition-all duration-200 hover:border-slate-600">
+                                                    <option value="user" {{ $user->role === 'user' ? 'selected' : '' }}>User</option>
+                                                    <option value="admin" {{ $user->role === 'admin' ? 'selected' : '' }}>Admin</option>
+                                                </select>
+                                                <button type="submit" class="px-3 py-1.5 bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 hover:bg-indigo-500/30 text-xs font-bold rounded-lg transition-all">
+                                                    Save
+                                                </button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                                 @endforeach
