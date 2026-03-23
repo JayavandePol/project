@@ -7,9 +7,9 @@
             <p class="mt-1 text-sm text-slate-400 font-medium">Beheer en bekijk al uw klantgegevens.</p>
         </div>
         <div class="flex items-center space-x-3">
-            <button class="px-4 py-2 bg-indigo-500 text-white text-sm font-semibold rounded-xl hover:bg-indigo-600 transition-colors shadow-lg shadow-indigo-500/20">
+            <a href="{{ route('klanten.create') }}" class="px-4 py-2 bg-indigo-500 text-white text-sm font-semibold rounded-xl hover:bg-indigo-600 transition-colors shadow-lg shadow-indigo-500/20">
                 Nieuwe Klant Toevoegen
-            </button>
+            </a>
         </div>
     </x-slot>
 

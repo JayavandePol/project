@@ -7,9 +7,9 @@
             <p class="mt-1 text-sm text-slate-400 font-medium">Houd al uw geregistreerde reisboekingen overzichtelijk bij.</p>
         </div>
         <div class="flex items-center space-x-3">
-            <button class="px-4 py-2 bg-indigo-500 text-white text-sm font-semibold rounded-xl hover:bg-indigo-600 transition-colors shadow-lg shadow-indigo-500/20">
+            <a href="{{ route('boekingen.create') }}" class="px-4 py-2 bg-indigo-500 text-white text-sm font-semibold rounded-xl hover:bg-indigo-600 transition-colors shadow-lg shadow-indigo-500/20">
                 Nieuwe Boeking
-            </button>
+            </a>
         </div>
     </x-slot>
 
