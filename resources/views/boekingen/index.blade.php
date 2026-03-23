@@ -36,28 +36,27 @@
                         <tbody class="divide-y divide-slate-700/50">
                             @forelse($boekingen as $boeking)
                                 <tr class="hover:bg-slate-700/30 transition-all duration-200">
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-slate-100">{{ $boeking->klant->name }}</div>
-                                        <div class="text-[10px] text-slate-500 truncate max-w-[150px]">{{ $boeking->klant->email }}</div>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-200">
+                                        {{ $boeking->klant_name }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-slate-100">{{ $boeking->reis->title }}</div>
-                                        <div class="text-[10px] text-slate-500">{{ $boeking->accommodatie->name }}</div>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
+                                        {{ $boeking->reis_title }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-slate-400 text-sm">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
+                                        {{ $boeking->acc_name }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
                                         {{ \Carbon\Carbon::parse($boeking->booking_date)->format('d-m-Y') }}
                                     </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-300">
+                                        {{ $boeking->user_name }}
+                                    </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        @php
-                                            $statusColors = [
-                                                'confirmed' => 'bg-green-500/20 text-green-400 border-green-500/30',
-                                                'pending' => 'bg-amber-500/20 text-amber-400 border-amber-500/30',
-                                                'cancelled' => 'bg-red-500/20 text-red-400 border-red-500/30'
-                                            ];
-                                            $colorClass = $statusColors[$boeking->status] ?? 'bg-slate-700 text-slate-400 border-slate-600';
-                                        @endphp
-                                        <span class="px-2 py-1 {{ $colorClass }} border rounded text-[10px] font-bold uppercase tracking-wider">
-                                            {{ $boeking->status }}
+                                        <span class="px-3 py-1 text-xs font-bold rounded-full
+                                            {{ $boeking->status === 'confirmed' ? 'bg-green-500/10 text-green-400 border border-green-500/20' :
+                                               ($boeking->status === 'pending' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' :
+                                               'bg-red-500/10 text-red-400 border border-red-500/20') }}">
+                                            {{ ucfirst($boeking->status) }}
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm">

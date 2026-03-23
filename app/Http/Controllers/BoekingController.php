@@ -17,11 +17,10 @@ class BoekingController extends Controller
     public function index()
     {
         try {
-            // Eager load relationships for the overview
-            $boekingen = Boeking::with(['klant', 'reis', 'accommodatie', 'user'])->get();
+            $boekingen = DB::select("CALL GetAllBoekingen()");
             return view('boekingen.index', compact('boekingen'));
         } catch (\Exception $e) {
-            Log::error('Fout bij het ophalen van boekingen: ' . $e->getMessage());
+            Log::error('Fout bij het ophalen van boekingen via SP: ' . $e->getMessage());
             return back()->with('error', 'Er is een fout opgetreden bij het laden van de boekingen.');
         }
     }

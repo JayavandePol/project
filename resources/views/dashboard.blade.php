@@ -25,13 +25,9 @@
                 <svg class="w-24 h-24 text-indigo-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
             </div>
             <div class="relative z-10">
-                <p class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-1">Total Users</p>
+                <p class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-1">Totaal Gebruikers</p>
                 <div class="flex items-baseline space-x-2">
-                    <h3 class="text-3xl font-bold text-slate-100">1,204</h3>
-                    <span class="text-sm font-medium text-green-400 flex items-center">
-                        <svg class="w-3 h-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
-                        12%
-                    </span>
+                    <h3 class="text-3xl font-bold text-slate-100">{{ number_format($stats->total_users) }}</h3>
                 </div>
             </div>
         </div>
@@ -42,13 +38,9 @@
                 <svg class="w-24 h-24 text-purple-400" fill="currentColor" viewBox="0 0 24 24"><path d="M13 2.05v3.03c3.39 6 3.39 6 6.92 0 .9-.18 1.75-.5 2.54l2.67 1.53c.56-1.24.83-2.61.83-4.07 0-5.18-3.95-9.45-9-9.95zM12 19c-3.87 0-7-3.13-7-7 0-3.53 2.61-6.43 6-6.92V2.05c-5.06.5-9 4.76-9 9.95 0 5.52 4.47 10 9.99 10 3.31 0 6.24-1.61 8.06-4.09l-2.6-1.53C16.17 17.98 14.21 19 12 19z"/></svg>
             </div>
             <div class="relative z-10">
-                <p class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-1">Sessions</p>
+                <p class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-1">Boekingen</p>
                 <div class="flex items-baseline space-x-2">
-                    <h3 class="text-3xl font-bold text-slate-100">8,430</h3>
-                    <span class="text-sm font-medium text-green-400 flex items-center">
-                        <svg class="w-3 h-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
-                        8.5%
-                    </span>
+                    <h3 class="text-3xl font-bold text-slate-100">{{ number_format($stats->total_bookings) }}</h3>
                 </div>
             </div>
         </div>
@@ -59,13 +51,9 @@
                 <svg class="w-24 h-24 text-indigo-400" fill="currentColor" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95a15.65 15.65 0 00-1.38-3.56A8.03 8.03 0 0118.92 8zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2s.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56A7.987 7.987 0 015.08 16zm2.95-8H5.08a7.987 7.987 0 013.9-3.56C8.37 5.55 7.91 6.75 7.59 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2s.07-1.34.16-2h4.68c.09.66.16 1.32.16 2s-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95a8.03 8.03 0 01-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2s-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z"/></svg>
             </div>
             <div class="relative z-10">
-                <p class="text-sm font-medium text-indigo-300 uppercase tracking-wider mb-1">Active Projects</p>
+                <p class="text-sm font-medium text-indigo-300 uppercase tracking-wider mb-1">Totale Omzet</p>
                 <div class="flex items-baseline space-x-2">
-                    <h3 class="text-3xl font-bold text-slate-100">42</h3>
-                    <span class="text-sm font-medium text-indigo-300/80">/ 50 limit</span>
-                </div>
-                <div class="mt-4 w-full bg-slate-900/50 rounded-full h-1.5">
-                    <div class="bg-indigo-400 h-1.5 rounded-full" style="width: 84%"></div>
+                    <h3 class="text-3xl font-bold text-slate-100">&euro;{{ number_format($stats->total_revenue, 2, ',', '.') }}</h3>
                 </div>
             </div>
         </div>

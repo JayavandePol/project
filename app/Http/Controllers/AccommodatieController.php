@@ -6,16 +6,17 @@ use App\Models\Accommodatie;
 use App\Http\Requests\StoreAccommodatieRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class AccommodatieController extends Controller
 {
     public function index()
     {
         try {
-            $accommodaties = Accommodatie::all();
+            $accommodaties = DB::select("CALL GetAllAccommodaties()");
             return view('accommodaties.index', compact('accommodaties'));
         } catch (\Exception $e) {
-            Log::error('Fout bij het ophalen van accommodaties: ' . $e->getMessage());
+            Log::error('Fout bij het ophalen van accommodaties via SP: ' . $e->getMessage());
             return back()->with('error', 'Er is een fout opgetreden bij het laden van de accommodaties.');
         }
     }
@@ -28,10 +29,15 @@ class AccommodatieController extends Controller
     public function store(StoreAccommodatieRequest $request)
     {
         try {
-            Accommodatie::create($request->validated());
-            return redirect()->route('accommodaties.index')->with('success', 'Accommodatie succesvol toegevoegd!');
+            DB::statement("CALL InsertAccommodatie(?, ?, ?, ?)", [
+                $request->name,
+                $request->location,
+                $request->type,
+                $request->price_per_night
+            ]);
+            return redirect()->route('accommodaties.index')->with('success', 'Accommodatie succesvol toegevoegd via Stored Procedure!');
         } catch (\Exception $e) {
-            Log::error('Fout bij het opslaan van accommodatie: ' . $e->getMessage());
+            Log::error('Fout bij het opslaan van accommodatie via SP: ' . $e->getMessage());
             return back()->withInput()->with('error', 'Er is een fout opgetreden bij het opslaan van de accommodatie.');
         }
     }
