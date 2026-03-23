@@ -88,9 +88,34 @@ class BoekingController extends Controller
                 $request->status
             ]);
             return redirect()->route('boekingen.index')->with('success', 'Boeking succesvol gewijzigd via Stored Procedure!');
+        } catch (\Illuminate\Database\QueryException $e) {
+            $errorCode = $e->errorInfo[1] ?? null;
+            if ($errorCode == 1644) {
+                return back()->withInput()->with('error', $e->errorInfo[2]);
+            }
+            Log::error('Fout bij het wijzigen van boeking via SP: ' . $e->getMessage());
+            return back()->withInput()->with('error', 'Er is een databasefout opgetreden bij het wijzigen.');
         } catch (\Exception $e) {
             Log::error('Fout bij het wijzigen van boeking via SP: ' . $e->getMessage());
-            return back()->withInput()->with('error', 'Er is een fout opgetreden bij het wijzigen van de boeking.');
+            return back()->withInput()->with('error', 'Er is een onverwachte fout opgetreden.');
+        }
+    }
+
+    public function destroy($id)
+    {
+        try {
+            DB::statement("CALL DeleteBoeking(?)", [$id]);
+            return redirect()->route('boekingen.index')->with('success', 'Boeking succesvol verwijderd via Stored Procedure.');
+        } catch (\Illuminate\Database\QueryException $e) {
+            $errorCode = $e->errorInfo[1] ?? null;
+            if ($errorCode == 1644) {
+                return back()->with('error', $e->errorInfo[2]);
+            }
+            Log::error('Fout bij verwijderen van boeking: ' . $e->getMessage());
+            return back()->with('error', 'Er is een fout opgetreden bij het verwijderen.');
+        } catch (\Exception $e) {
+            Log::error('Onverwachte fout bij verwijderen: ' . $e->getMessage());
+            return back()->with('error', 'Er is een onverwachte fout opgetreden.');
         }
     }
 }

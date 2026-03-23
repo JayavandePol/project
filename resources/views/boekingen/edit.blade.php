@@ -14,12 +14,40 @@
     </x-slot>
 
     <div class="max-w-3xl mx-auto py-8">
+        @php 
+            $invoice = DB::table('facturen')->where('boeking_id', $boeking->id)->first();
+            $reis = DB::table('reizen')->where('id', $boeking->reis_id)->first();
+            $isPaid = $invoice && $invoice->status === 'paid';
+            $isExpired = $reis && \Carbon\Carbon::parse($reis->start_date)->isPast();
+            $isLocked = $isPaid || $isExpired;
+        @endphp
+        
+        @if($isLocked)
+            <div class="mb-6 p-6 bg-amber-500/10 border border-amber-500/20 rounded-2xl backdrop-blur-md flex items-start space-x-4 shadow-xl">
+                <div class="p-3 bg-amber-500/20 rounded-xl">
+                    <svg class="w-6 h-6 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-amber-400 font-bold text-lg">Boeking is Vergrendeld</h3>
+                    <p class="text-amber-400/80 text-sm mt-1">
+                        @if($isPaid)
+                            Deze boeking is reeds betaald en kan daarom niet meer worden gewijzigd.
+                        @else
+                            De reis voor deze boeking is al gestart of voltooid. Wijzigingen zijn niet meer toegestaan.
+                        @endif
+                    </p>
+                </div>
+            </div>
+        @endif
+
         <div class="bg-slate-800/60 backdrop-blur-xl border border-slate-700/50 rounded-2xl shadow-xl overflow-hidden">
             <form action="{{ route('boekingen.update', $boeking->id) }}" method="POST" id="editBoekingForm" class="p-8 space-y-6">
                 @csrf
                 @method('PUT')
 
-                <div class="grid grid-cols-1 gap-6">
+                <div class="grid grid-cols-1 gap-6 {{ $isLocked ? 'opacity-50 pointer-events-none' : '' }}">
                     <!-- Klant Selectie -->
                     <div>
                         <label for="klant_id" class="block text-sm font-semibold text-slate-300 mb-2">Klant</label>
@@ -92,15 +120,17 @@
                     </div>
                 </div>
 
-                <div class="pt-4">
-                    <button type="submit" class="w-full py-4 bg-indigo-500 hover:bg-indigo-600 text-white font-bold rounded-xl transition-all shadow-lg shadow-indigo-500/25 flex items-center justify-center space-x-2 group">
-                        <span>Wijzigingen Opslaan</span>
-                        <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
-                        </svg>
-                    </button>
-                    <p class="mt-4 text-center text-xs text-slate-500 italic">Wijzigingen in de boeking hebben geen invloed op reeds gegenereerde facturen.</p>
-                </div>
+                @if(!$isLocked)
+                    <div class="pt-4">
+                        <button type="submit" class="w-full py-4 bg-indigo-500 hover:bg-indigo-600 text-white font-bold rounded-xl transition-all shadow-lg shadow-indigo-500/25 flex items-center justify-center space-x-2 group">
+                            <span>Wijzigingen Opslaan</span>
+                            <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                            </svg>
+                        </button>
+                        <p class="mt-4 text-center text-xs text-slate-500 italic">Wijzigingen in de boeking hebben geen invloed op reeds gegenereerde facturen.</p>
+                    </div>
+                @endif
             </form>
         </div>
     </div>

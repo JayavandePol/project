@@ -14,12 +14,28 @@
     </x-slot>
 
     <div class="max-w-3xl mx-auto py-8">
+        @php $isExpired = \Carbon\Carbon::parse($reis->start_date)->isPast(); @endphp
+        
+        @if($isExpired)
+            <div class="mb-6 p-6 bg-rose-500/10 border border-rose-500/20 rounded-2xl backdrop-blur-md flex items-start space-x-4 shadow-xl">
+                <div class="p-3 bg-rose-500/20 rounded-xl">
+                    <svg class="w-6 h-6 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-rose-400 font-bold text-lg">Reis is Vergrendeld</h3>
+                    <p class="text-rose-400/80 text-sm mt-1">Deze reis is al gestart op {{ \Carbon\Carbon::parse($reis->start_date)->format('d-m-Y') }}. Wijzigingen zijn niet meer toegestaan volgens de bedrijfsregels.</p>
+                </div>
+            </div>
+        @endif
+
         <div class="bg-slate-800/60 backdrop-blur-xl border border-slate-700/50 rounded-2xl shadow-xl overflow-hidden">
             <form action="{{ route('reizen.update', $reis->id) }}" method="POST" id="editReisForm" class="p-8 space-y-6">
                 @csrf
                 @method('PUT')
 
-                <div class="grid grid-cols-1 gap-6">
+                <div class="grid grid-cols-1 gap-6 {{ $isExpired ? 'opacity-50 pointer-events-none' : '' }}">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="title" class="block text-sm font-semibold text-slate-300 mb-2">Titel van de Reis</label>
@@ -79,14 +95,16 @@
                     De einddatum moet na de begindatum liggen.
                 </div>
 
-                <div class="pt-4">
-                    <button type="submit" class="w-full py-4 bg-indigo-500 hover:bg-indigo-600 text-white font-bold rounded-xl transition-all shadow-lg shadow-indigo-500/25 flex items-center justify-center space-x-2 group">
-                        <span>Reis Bijwerken</span>
-                        <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
-                        </svg>
-                    </button>
-                </div>
+                @if(!$isExpired)
+                    <div class="pt-4">
+                        <button type="submit" class="w-full py-4 bg-indigo-500 hover:bg-indigo-600 text-white font-bold rounded-xl transition-all shadow-lg shadow-indigo-500/25 flex items-center justify-center space-x-2 group">
+                            <span>Reis Bijwerken</span>
+                            <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                            </svg>
+                        </button>
+                    </div>
+                @endif
             </form>
         </div>
     </div>

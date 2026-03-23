@@ -54,7 +54,19 @@
                                         &euro;{{ number_format($acc->price_per_night, 2, ',', '.') }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
-                                        <a href="{{ route('accommodaties.edit', $acc->id) }}" class="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">Bewerken</a>
+                                        <div class="flex items-center justify-end space-x-3">
+                                            <a href="{{ route('accommodaties.edit', $acc->id) }}" class="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">Bewerken</a>
+                                            
+                                            <form action="{{ route('accommodaties.destroy', $acc->id) }}" method="POST" onsubmit="return confirm('Weet je zeker dat je deze accommodatie wilt verwijderen?');" class="inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="text-slate-500 hover:text-rose-400 transition-colors">
+                                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                    </svg>
+                                                </button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                             @empty

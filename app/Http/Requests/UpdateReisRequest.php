@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class UpdateReisRequest extends FormRequest
 {
@@ -38,5 +40,19 @@ class UpdateReisRequest extends FormRequest
             'end_date.required' => 'Einddatum is verplicht.',
             'end_date.after' => 'Einddatum moet na de begindatum liggen.',
         ];
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $id = $this->route('id');
+            // Use SP to get the current record
+            $reisResult = DB::select("CALL GetReisById(?)", [$id]);
+            $reis = $reisResult[0] ?? null;
+
+            if ($reis && Carbon::parse($reis->start_date)->isPast()) {
+                $validator->errors()->add('start_date', 'Deze reis is al gestart en kan niet meer gewijzigd worden.');
+            }
+        });
     }
 }

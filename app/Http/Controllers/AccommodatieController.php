@@ -75,4 +75,15 @@ class AccommodatieController extends Controller
             return back()->withInput()->with('error', 'Er is een fout opgetreden bij het wijzigen van de accommodatie.');
         }
     }
+
+    public function destroy($id)
+    {
+        try {
+            DB::statement("CALL DeleteAccommodatie(?)", [$id]);
+            return redirect()->route('accommodaties.index')->with('success', 'Accommodatie succesvol verwijderd via Stored Procedure.');
+        } catch (\Exception $e) {
+            Log::error('Fout bij verwijderen van accommodatie: ' . $e->getMessage());
+            return back()->with('error', 'Er is een fout opgetreden bij het verwijderen.');
+        }
+    }
 }

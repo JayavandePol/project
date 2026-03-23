@@ -40,6 +40,12 @@ Dit document beschrijft de "unhappy" scenario's die zijn geïdentificeerd en afg
 - **Scenario**: Gebruiker voert een negatief getal in voor prijs of maximaal aantal deelnemers.
 - **Afhandeling**: `min:0` (prijs) en `min:1` (deelnemers) validatie regels.
 
+### 3. Bewerken van Verlopen Reizen
+- **Scenario**: Gebruiker probeert een reis te wijzigen waarvan de startdatum al is verstreken.
+- **Afhandeling**: 
+  - **Stored Procedure**: `UpdateReis` controleert of `start_date` in het verleden ligt en gooit een foutmelding (`SIGNAL SQLSTATE '45000'`).
+  - **Controller**: Vangt de database-fout op en stuurt de gebruiker terug met een duidelijke melding.
+
 ---
 
 ## Accommodaties
@@ -56,7 +62,18 @@ Dit document beschrijft de "unhappy" scenario's die zijn geïdentificeerd en afg
 - **Scenario**: Gebruiker voert 0 of minder personen in voor een boeking.
 - **Afhandeling**: `min:1` validatie in zowel JavaScript als `FormRequest`.
 
-### 2. Conflict met Verwijderde Entiteiten (Database Integriteit)
+### 2. Bewerken bij Betaalde Factuur
+- **Scenario**: Gebruiker probeert een boeking te wijzigen terwijl de bijbehorende factuur al is gemarkeerd als 'paid'.
+- **Afhandeling**:
+  - **Stored Procedure**: `UpdateBoeking` controleert de status in de `facturen` tabel. Indien 'paid', wordt de actie geblokkeerd via `SIGNAL SQLSTATE`.
+  - **UI**: In het overzicht en op de edit-pagina wordt aangegeven dat de boeking "locked" is vanwege betaling.
+
+### 3. Bewerken van Verlopen Boekingen
+- **Scenario**: Gebruiker probeert een boeking te wijzigen voor een reis die al heeft plaatsgevonden.
+- **Afhandeling**:
+  - **Stored Procedure**: `UpdateBoeking` checkt de `start_date` van de gekoppelde reis. Indien in het verleden, wordt update geweigerd.
+
+### 4. Conflict met Verwijderde Entiteiten (Database Integriteit)
 - **Scenario**: Gebruiker probeert een boeking te maken voor een klant, reis of accommodatie die net is verwijderd door een andere beheerder.
 - **Afhandeling**: Foreign Key constraints in de database en `exists:table,id` validatie regels in de Request klassen vangen dit af. Stored Procedures genereren een fout die door de Controller in een `try-catch` blok wordt opgevangen.
 

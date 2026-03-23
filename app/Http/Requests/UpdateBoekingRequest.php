@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class UpdateBoekingRequest extends FormRequest
 {
@@ -38,5 +40,30 @@ class UpdateBoekingRequest extends FormRequest
             'booking_date.required' => 'Boekingsdatum is verplicht.',
             'status.required' => 'Status is verplicht.',
         ];
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $id = $this->route('id');
+            
+            $boekingResult = DB::select("CALL GetBoekingById(?)", [$id]);
+            $boeking = $boekingResult[0] ?? null;
+            
+            if (!$boeking) return;
+
+            // Check invoice status
+            $invoice = DB::table('facturen')->where('boeking_id', $id)->first();
+            if ($invoice && $invoice->status === 'paid') {
+                $validator->errors()->add('status', 'Deze boeking is al betaald en kan niet meer gewijzigd worden.');
+            }
+
+            // Check travel start date
+            $reisResult = DB::select("CALL GetReisById(?)", [$boeking->reis_id]);
+            $reis = $reisResult[0] ?? null;
+            if ($reis && Carbon::parse($reis->start_date)->isPast()) {
+                $validator->errors()->add('status', 'De reis voor deze boeking is al gestart of voltooid.');
+            }
+        });
     }
 }

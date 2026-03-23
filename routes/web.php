@@ -22,24 +22,25 @@ Route::middleware('auth')->group(function () {
     Route::post('/klanten', [App\Http\Controllers\KlantController::class, 'store'])->name('klanten.store');
     Route::get('/klanten/{id}/edit', [App\Http\Controllers\KlantController::class, 'edit'])->name('klanten.edit');
     Route::put('/klanten/{id}', [App\Http\Controllers\KlantController::class, 'update'])->name('klanten.update');
+    Route::delete('/klanten/{id}', [App\Http\Controllers\KlantController::class, 'destroy'])->name('klanten.destroy');
 
     Route::get('/reizen', [App\Http\Controllers\ReisController::class, 'index'])->name('reizen.index');
-    Route::get('/reizen/create', [App\Http\Controllers\ReisController::class, 'create'])->name('reizen.create');
-    Route::post('/reizen', [App\Http\Controllers\ReisController::class, 'store'])->name('reizen.store');
-    Route::get('/reizen/{id}/edit', [App\Http\Controllers\ReisController::class, 'edit'])->name('reizen.edit');
-    Route::put('/reizen/{id}', [App\Http\Controllers\ReisController::class, 'update'])->name('reizen.update');
+    // ...
+    Route::delete('/reizen/{id}', [App\Http\Controllers\ReisController::class, 'destroy'])->name('reizen.destroy');
 
     Route::get('/accommodaties', [App\Http\Controllers\AccommodatieController::class, 'index'])->name('accommodaties.index');
     Route::get('/accommodaties/create', [App\Http\Controllers\AccommodatieController::class, 'create'])->name('accommodaties.create');
     Route::post('/accommodaties', [App\Http\Controllers\AccommodatieController::class, 'store'])->name('accommodaties.store');
     Route::get('/accommodaties/{id}/edit', [App\Http\Controllers\AccommodatieController::class, 'edit'])->name('accommodaties.edit');
     Route::put('/accommodaties/{id}', [App\Http\Controllers\AccommodatieController::class, 'update'])->name('accommodaties.update');
+    Route::delete('/accommodaties/{id}', [App\Http\Controllers\AccommodatieController::class, 'destroy'])->name('accommodaties.destroy');
 
     Route::get('/boekingen', [App\Http\Controllers\BoekingController::class, 'index'])->name('boekingen.index');
     Route::get('/boekingen/create', [App\Http\Controllers\BoekingController::class, 'create'])->name('boekingen.create');
     Route::post('/boekingen', [App\Http\Controllers\BoekingController::class, 'store'])->name('boekingen.store');
     Route::get('/boekingen/{id}/edit', [App\Http\Controllers\BoekingController::class, 'edit'])->name('boekingen.edit');
     Route::put('/boekingen/{id}', [App\Http\Controllers\BoekingController::class, 'update'])->name('boekingen.update');
+    Route::delete('/boekingen/{id}', [App\Http\Controllers\BoekingController::class, 'destroy'])->name('boekingen.destroy');
 
     Route::get('/facturen', [App\Http\Controllers\FactuurController::class, 'index'])->name('facturen.index');
     Route::patch('/facturen/{id}/status', [App\Http\Controllers\FactuurController::class, 'updateStatus'])->name('facturen.updateStatus');

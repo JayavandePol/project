@@ -75,4 +75,15 @@ class KlantController extends Controller
             return back()->withInput()->with('error', 'Er is een fout opgetreden bij het wijzigen van de klant.');
         }
     }
+
+    public function destroy($id)
+    {
+        try {
+            DB::statement("CALL DeleteKlant(?)", [$id]);
+            return redirect()->route('klanten.index')->with('success', 'Klant succesvol verwijderd via Stored Procedure.');
+        } catch (\Exception $e) {
+            Log::error('Fout bij verwijderen van klant: ' . $e->getMessage());
+            return back()->with('error', 'Er is een fout opgetreden bij het verwijderen.');
+        }
+    }
 }

@@ -44,9 +44,28 @@
                         <div class="flex items-center justify-between mt-6 pt-4 border-t border-slate-700/50">
                             <div class="flex flex-col">
                                 <span class="text-[10px] uppercase font-bold text-slate-500 tracking-wider">Datum</span>
-                                <span class="text-xs text-slate-300">{{ \Carbon\Carbon::parse($reis->start_date)->format('d M') }} - {{ \Carbon\Carbon::parse($reis->end_date)->format('d M Y') }}</span>
+                                <span class="text-xs text-slate-300 {{ \Carbon\Carbon::parse($reis->start_date)->isPast() ? 'text-rose-400' : '' }}">
+                                    {{ \Carbon\Carbon::parse($reis->start_date)->format('d M') }} - {{ \Carbon\Carbon::parse($reis->end_date)->format('d M Y') }}
+                                </span>
                             </div>
-                            <a href="{{ route('reizen.edit', $reis->id) }}" class="text-indigo-400 hover:text-indigo-300 text-sm font-medium transition-colors">Bewerken</a>
+                            
+                            <div class="flex items-center space-x-3">
+                                @if(\Carbon\Carbon::parse($reis->start_date)->isPast())
+                                    <span class="px-2 py-0.5 bg-rose-500/10 text-rose-400 border border-rose-500/20 text-[10px] font-bold rounded-full uppercase tracking-tighter">Verlopen</span>
+                                @else
+                                    <a href="{{ route('reizen.edit', $reis->id) }}" class="text-indigo-400 hover:text-indigo-300 text-sm font-medium transition-colors">Bewerken</a>
+                                    
+                                    <form action="{{ route('reizen.destroy', $reis->id) }}" method="POST" onsubmit="return confirm('Weet je zeker dat je deze reis wilt verwijderen? Dit kan alleen als de reis nog niet is gestart.');" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-slate-500 hover:text-rose-400 transition-colors">
+                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                            </svg>
+                                        </button>
+                                    </form>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 </div>
