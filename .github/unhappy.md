@@ -79,6 +79,34 @@ Dit document beschrijft de "unhappy" scenario's die zijn geïdentificeerd en afg
 
 ---
 
+## Verwijderen (Deletion) - Unhappy Flows
+
+### 1. Verwijderen Klant met Boekingen
+- **Scenario**: Gebruiker probeert een klant te verwijderen die al één of meerdere boekingen in het systeem heeft staan.
+- **Afhandeling**: De Stored Procedure `DeleteKlant` controleert op bestaande rijen in de `boekingen` tabel. Indien gevonden, wordt een `SIGNAL SQLSTATE '45000'` gegooid: "Klant kan niet worden verwijderd omdat er nog actieve boekingen zijn."
+
+### 2. Verwijderen van Gestarte Reis
+- **Scenario**: Gebruiker probeert een reis te verwijderen die vandaag of in het verleden is gestart.
+- **Afhandeling**: De Stored Procedure `DeleteReis` controleert de `start_date`. Indien in het verleden, wordt verwijdering geblokkeerd.
+
+### 3. Verwijderen Accommodatie met Afhankelijkheden
+- **Scenario**: Gebruiker probeert een accommodatie te verwijderen waarvoor nog boekingen staan.
+- **Afhandeling**: `DeleteAccommodatie` blokkeert de actie indien er nog actieve koppelingen zijn in de `boekingen` tabel.
+
+### 4. Verwijderen Betaalde Boeking
+- **Scenario**: Gebruiker probeert een boeking te verwijderen waarvan de factuur al op 'paid' staat.
+- **Afhandeling**: `DeleteBoeking` controleert de factuurstatus en weigert verwijdering indien betaald.
+
+### 5. Verwijderen Eigen Admin Account
+- **Scenario**: Een beheerder probeert zijn eigen account te verwijderen terwijl hij is ingelogd.
+- **Afhandeling**: De Stored Procedure `DeleteUser` controleert het `p_current_user_id`. Indien dit overeenkomt met het te verwijderen ID, wordt de actie geblokkeerd: "U kunt uw eigen account niet verwijderen."
+
+### 6. Verwijderen van Betaalde Factuur
+- **Scenario**: Gebruiker probeert een factuur te verwijderen die al is voldaan.
+- **Afhandeling**: `DeleteFactuur` blokkeert deze actie om de financiële administratie te beschermen.
+
+---
+
 ## Database & Stored Procedures
 
 ### 1. Stored Procedure Runtime Fout

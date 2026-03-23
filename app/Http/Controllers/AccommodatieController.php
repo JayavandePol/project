@@ -81,6 +81,13 @@ class AccommodatieController extends Controller
         try {
             DB::statement("CALL DeleteAccommodatie(?)", [$id]);
             return redirect()->route('accommodaties.index')->with('success', 'Accommodatie succesvol verwijderd via Stored Procedure.');
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->getCode() == '45000' || str_contains($e->getMessage(), '1644')) {
+                $errorMessage = $e->getPrevious() ? $e->getPrevious()->getMessage() : $e->getMessage();
+                if (preg_match("/1644\s+(.*)/i", $errorMessage, $matches)) { $errorMessage = $matches[1]; }
+                return back()->with('error', $errorMessage);
+            }
+            return back()->with('error', 'Databasefout: Accommodatie kan niet worden verwijderd.');
         } catch (\Exception $e) {
             Log::error('Fout bij verwijderen van accommodatie: ' . $e->getMessage());
             return back()->with('error', 'Er is een fout opgetreden bij het verwijderen.');

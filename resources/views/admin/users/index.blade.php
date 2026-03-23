@@ -53,18 +53,29 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-slate-400 text-sm">
                                         {{ $user->created_at->format('M d, Y') }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right">
-                                        <div class="flex items-center justify-end space-x-4">
-                                            <a href="{{ route('admin.users.edit', $user->id) }}" class="text-indigo-400 hover:text-indigo-300 text-sm font-medium transition-colors">Bewerken</a>
-                                            <form action="{{ route('admin.users.updateRole', $user->id ?? $user->id) }}" method="POST" class="inline-flex items-center space-x-2">
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
+                                        <div class="flex items-center justify-end space-x-3">
+                                            <a href="{{ route('admin.users.edit', $user->id) }}" class="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">Bewerken</a>
+                                            
+                                            <form action="{{ route('admin.users.updateRole', $user->id) }}" method="POST" class="inline-flex items-center space-x-2">
                                                 @csrf
                                                 @method('PATCH')
-                                                <select name="role" class="bg-slate-900/50 border border-slate-700 text-slate-300 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block p-2 transition-all duration-200 hover:border-slate-600">
+                                                <select name="role" class="bg-slate-900/50 border border-slate-700 text-slate-300 text-[10px] font-bold uppercase rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block p-1.5 transition-all duration-200">
                                                     <option value="user" {{ $user->role === 'user' ? 'selected' : '' }}>User</option>
                                                     <option value="admin" {{ $user->role === 'admin' ? 'selected' : '' }}>Admin</option>
                                                 </select>
-                                                <button type="submit" class="px-3 py-1.5 bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 hover:bg-indigo-500/30 text-xs font-bold rounded-lg transition-all">
-                                                    Save
+                                                <button type="submit" class="p-1.5 bg-indigo-500/10 text-indigo-400 border border-indigo-500/30 hover:bg-indigo-500/30 rounded-lg transition-all" title="Rol Opslaan">
+                                                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                                </button>
+                                            </form>
+
+                                            <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" onsubmit="return confirm('Weet je zeker dat je deze gebruiker wilt verwijderen?');" class="inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="text-slate-500 hover:text-rose-400 transition-colors" title="Verwijderen">
+                                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                    </svg>
                                                 </button>
                                             </form>
                                         </div>

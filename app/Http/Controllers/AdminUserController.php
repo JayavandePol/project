@@ -80,8 +80,6 @@ class AdminUserController extends Controller
                 'role' => 'required|in:admin,user',
             ]);
 
-            // We use UpdateUser but only changing the role. The SP requires ID, Name, Email, Role.
-            // We need to fetch the user first to get their existing name and email.
             $userResult = DB::select("CALL GetUserById(?)", [$id]);
             $user = $userResult[0] ?? abort(404);
 
@@ -96,6 +94,24 @@ class AdminUserController extends Controller
         } catch (\Exception $e) {
             Log::error('Fout bij het bijwerken van gebruikersrol via SP: ' . $e->getMessage());
             return back()->with('error', 'Er is een fout opgetreden bij het bijwerken van de gebruikersrol.');
+        }
+    }
+
+    public function destroy($id)
+    {
+        try {
+            DB::statement("CALL DeleteUser(?, ?)", [$id, auth()->id()]);
+            return redirect()->route('admin.users.index')->with('success', 'Gebruiker succesvol verwijderd via Stored Procedure.');
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->getCode() == '45000' || str_contains($e->getMessage(), '1644')) {
+                $errorMessage = $e->getPrevious() ? $e->getPrevious()->getMessage() : $e->getMessage();
+                if (preg_match("/1644\s+(.*)/i", $errorMessage, $matches)) { $errorMessage = $matches[1]; }
+                return back()->with('error', $errorMessage);
+            }
+            return back()->with('error', 'Systeemfout: Gebruiker kan niet worden verwijderd.');
+        } catch (\Exception $e) {
+            Log::error('Fout bij verwijderen user: ' . $e->getMessage());
+            return back()->with('error', 'Er is een onverwachte fout opgetreden.');
         }
     }
 }

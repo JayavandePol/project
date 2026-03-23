@@ -44,6 +44,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/facturen', [App\Http\Controllers\FactuurController::class, 'index'])->name('facturen.index');
     Route::patch('/facturen/{id}/status', [App\Http\Controllers\FactuurController::class, 'updateStatus'])->name('facturen.updateStatus');
+    Route::delete('/facturen/{id}', [App\Http\Controllers\FactuurController::class, 'destroy'])->name('facturen.destroy');
 });
 
 require __DIR__.'/auth.php';
@@ -57,4 +58,5 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/users/{id}/edit', [AdminUserController::class, 'edit'])->name('users.edit');
     Route::put('/users/{id}', [AdminUserController::class, 'update'])->name('users.update');
     Route::patch('/users/{id}/role', [AdminUserController::class, 'updateRole'])->name('users.updateRole');
+    Route::delete('/users/{id}', [AdminUserController::class, 'destroy'])->name('users.destroy');
 });
