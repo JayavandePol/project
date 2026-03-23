@@ -60,11 +60,32 @@
 
                 <div class="flex items-center justify-end space-x-6 pt-8 border-t border-slate-700/50">
                     <a href="{{ route('reizen.index') }}" class="text-sm font-semibold text-slate-400 hover:text-slate-200 transition-colors">Terug</a>
-                    <button type="submit" class="px-8 py-4 bg-indigo-500 text-white font-bold rounded-2xl hover:bg-indigo-600 transition-all duration-200 shadow-xl shadow-indigo-500/30 transform hover:-translate-y-0.5">
+                    <button type="submit" id="submitBtn" class="px-8 py-4 bg-indigo-500 text-white font-bold rounded-2xl hover:bg-indigo-600 transition-all duration-200 shadow-xl shadow-indigo-500/30 transform hover:-translate-y-0.5">
                         Reis Publiceren
                     </button>
                 </div>
             </form>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form');
+            const submitBtn = document.getElementById('submitBtn');
+
+            form.addEventListener('submit', function(e) {
+                const startDate = new Date(document.getElementById('start_date').value);
+                const endDate = new Date(document.getElementById('end_date').value);
+
+                if (endDate <= startDate) {
+                    e.preventDefault();
+                    alert('De einddatum moet ná de begindatum liggen.');
+                    return;
+                }
+
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = 'Publiceren...';
+            });
+        });
+    </script>
 </x-app-layout>

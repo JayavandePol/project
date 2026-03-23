@@ -57,11 +57,38 @@
 
                 <div class="flex items-center justify-end space-x-4 pt-6 border-t border-slate-700/50">
                     <a href="{{ route('klanten.index') }}" class="text-sm font-semibold text-slate-400 hover:text-slate-200 transition-colors">Annuleren</a>
-                    <button type="submit" class="px-6 py-3 bg-indigo-500 text-white font-bold rounded-xl hover:bg-indigo-600 transition-all duration-200 shadow-lg shadow-indigo-500/25">
+                    <button type="submit" id="submitBtn" class="px-6 py-3 bg-indigo-500 text-white font-bold rounded-xl hover:bg-indigo-600 transition-all duration-200 shadow-lg shadow-indigo-500/25">
                         Klant Opslaan
                     </button>
                 </div>
             </form>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form');
+            const submitBtn = document.getElementById('submitBtn');
+
+            form.addEventListener('submit', function(e) {
+                const name = document.getElementById('name').value.trim();
+                const email = document.getElementById('email').value.trim();
+
+                if (!name || !email) {
+                    e.preventDefault();
+                    alert('Vul alstublieft alle verplichte velden in.');
+                    return;
+                }
+
+                if (!email.includes('@')) {
+                    e.preventDefault();
+                    alert('Voer een geldig e-mailadres in.');
+                    return;
+                }
+
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<svg class="animate-spin h-5 w-5 mr-3 text-white inline" viewBox="0 0 24 24">...</svg> Verwerken...';
+            });
+        });
+    </script>
 </x-app-layout>

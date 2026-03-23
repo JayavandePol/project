@@ -51,11 +51,31 @@
 
                 <div class="flex items-center justify-end space-x-4 pt-6">
                     <a href="{{ route('accommodaties.index') }}" class="text-sm font-semibold text-slate-400 hover:text-slate-200 transition-colors">Annuleren</a>
-                    <button type="submit" class="px-6 py-3 bg-indigo-500 text-white font-bold rounded-xl hover:bg-indigo-600 transition-all duration-200 shadow-lg shadow-indigo-500/25">
+                    <button type="submit" id="submitBtn" class="px-6 py-3 bg-indigo-500 text-white font-bold rounded-xl hover:bg-indigo-600 transition-all duration-200 shadow-lg shadow-indigo-500/25">
                         Opslaan
                     </button>
                 </div>
             </form>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form');
+            const submitBtn = document.getElementById('submitBtn');
+
+            form.addEventListener('submit', function(e) {
+                const price = document.getElementById('price_per_night').value;
+
+                if (price < 0) {
+                    e.preventDefault();
+                    alert('Prijs per nacht kan niet negatief zijn.');
+                    return;
+                }
+
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = 'Opslaan...';
+            });
+        });
+    </script>
 </x-app-layout>

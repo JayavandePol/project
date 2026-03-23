@@ -82,11 +82,33 @@
 
                 <div class="flex items-center justify-end space-x-6 pt-8 border-t border-slate-700/50">
                     <a href="{{ route('boekingen.index') }}" class="text-sm font-semibold text-slate-400 hover:text-slate-200 transition-colors">Annuleren</a>
-                    <button type="submit" class="px-8 py-4 bg-indigo-500 text-white font-bold rounded-2xl hover:bg-indigo-600 transition-all duration-200 shadow-xl shadow-indigo-500/30">
+                    <button type="submit" id="submitBtn" class="px-8 py-4 bg-indigo-500 text-white font-bold rounded-2xl hover:bg-indigo-600 transition-all duration-200 shadow-xl shadow-indigo-500/30">
                         Boeking Bevestigen
                     </button>
                 </div>
             </form>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form');
+            const submitBtn = document.getElementById('submitBtn');
+
+            form.addEventListener('submit', function(e) {
+                const klant = document.getElementById('klant_id').value;
+                const reis = document.getElementById('reis_id').value;
+                const acc = document.getElementById('accommodatie_id').value;
+
+                if (!klant || !reis || !acc) {
+                    e.preventDefault();
+                    alert('Selecteer alstublieft een klant, reis én accommodatie.');
+                    return;
+                }
+
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = 'Bevestigen...';
+            });
+        });
+    </script>
 </x-app-layout>

@@ -61,11 +61,38 @@
 
                 <div class="flex items-center justify-end space-x-4 pt-6">
                     <a href="{{ route('admin.users.index') }}" class="text-sm font-semibold text-slate-400 hover:text-slate-200 transition-colors">Annuleren</a>
-                    <button type="submit" class="px-6 py-3 bg-indigo-500 text-white font-bold rounded-xl hover:bg-indigo-600 transition-all duration-200 shadow-lg shadow-indigo-500/25">
+                    <button type="submit" id="submitBtn" class="px-6 py-3 bg-indigo-500 text-white font-bold rounded-xl hover:bg-indigo-600 transition-all duration-200 shadow-lg shadow-indigo-500/25">
                         Account Aanmaken
                     </button>
                 </div>
             </form>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form');
+            const submitBtn = document.getElementById('submitBtn');
+
+            form.addEventListener('submit', function(e) {
+                const password = document.getElementById('password').value;
+                const confirmation = document.getElementById('password_confirmation').value;
+
+                if (password !== confirmation) {
+                    e.preventDefault();
+                    alert('Wachtwoorden komen niet overeen.');
+                    return;
+                }
+
+                if (password.length < 8) {
+                    e.preventDefault();
+                    alert('Wachtwoord moet minimaal 8 tekens lang zijn.');
+                    return;
+                }
+
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = 'Aanmaken...';
+            });
+        });
+    </script>
 </x-app-layout>
