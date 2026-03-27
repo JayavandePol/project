@@ -42,23 +42,30 @@ class UpdateBoekingRequest extends FormRequest
         ];
     }
 
+    /**
+     * De 'after' hook voor complexe business logica validatie.
+     * Hier controleren we op 'unhappy scenarios' die verder gaan dan simpele veld-validatie.
+     */
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
-            $id = $this->route('id');
+            $id = $this->route('id'); // Het ID van de boeking uit de URL
             
+            // Haal de boeking op via SP
             $boekingResult = DB::select("CALL GetBoekingById(?)", [$id]);
             $boeking = $boekingResult[0] ?? null;
             
             if (!$boeking) return;
 
-            // Check invoice status
+            // UNHAPPY SCENARIO 1: Controleer of de boeking al betaald is.
+            // Een betaalde boeking mag niet gewijzigd worden om administratieve integriteit te behouden.
             $invoice = DB::table('facturen')->where('boeking_id', $id)->first();
             if ($invoice && $invoice->status === 'paid') {
                 $validator->errors()->add('status', 'Deze boeking is al betaald en kan niet meer gewijzigd worden.');
             }
 
-            // Check travel start date
+            // UNHAPPY SCENARIO 2: Controleer of de reis al gestart is.
+            // Wijzigingen zijn niet toegestaan als de reisdatum in het verleden ligt of vandaag is.
             $reisResult = DB::select("CALL GetReisById(?)", [$boeking->reis_id]);
             $reis = $reisResult[0] ?? null;
             if ($reis && Carbon::parse($reis->start_date)->isPast()) {

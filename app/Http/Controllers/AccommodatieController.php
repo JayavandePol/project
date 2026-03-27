@@ -87,10 +87,11 @@ class AccommodatieController extends Controller
                 if (preg_match("/1644\s+(.*)/i", $errorMessage, $matches)) { $errorMessage = $matches[1]; }
                 return back()->with('error', $errorMessage);
             }
-            return back()->with('error', 'Databasefout: Accommodatie kan niet worden verwijderd.');
+            Log::error('Fout bij verwijderen van accommodatie (Database): ' . $e->getMessage());
+            return back()->with('error', 'Systeemfout: Accommodatie kan niet worden verwijderd (mogelijk nog actieve koppelingen).');
         } catch (\Exception $e) {
             Log::error('Fout bij verwijderen van accommodatie: ' . $e->getMessage());
-            return back()->with('error', 'Er is een fout opgetreden bij het verwijderen.');
+            return back()->with('error', 'Er is een onverwachte fout opgetreden.');
         }
     }
 }

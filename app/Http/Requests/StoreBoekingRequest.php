@@ -11,18 +11,24 @@ class StoreBoekingRequest extends FormRequest
         return true;
     }
 
+    /**
+     * De regels waaraan een nieuwe boeking moet voldoen.
+     */
     public function rules(): array
     {
         return [
-            'klant_id' => 'required|exists:klanten,id',
-            'reis_id' => 'required|exists:reizen,id',
-            'accommodatie_id' => 'required|exists:accommodaties,id',
-            'num_people' => 'required|integer|min:1',
-            'booking_date' => 'required|date|after_or_equal:today',
-            'status' => 'required|string|in:pending,confirmed,cancelled',
+            'klant_id' => 'required|exists:klanten,id', // Klant moet bestaan
+            'reis_id' => 'required|exists:reizen,id',   // Reis moet bestaan
+            'accommodatie_id' => 'required|exists:accommodaties,id', // Accommodatie moet bestaan
+            'num_people' => 'required|integer|min:1',  // Minimaal 1 persoon
+            'booking_date' => 'required|date|after_or_equal:today', // Geen boekingen in het verleden
+            'status' => 'required|string|in:pending,confirmed,cancelled', // Vaste statussen
         ];
     }
 
+    /**
+     * Aangepaste foutmeldingen voor de gebruiker.
+     */
     public function messages(): array
     {
         return [

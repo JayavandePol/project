@@ -83,18 +83,15 @@ class KlantController extends Controller
             return redirect()->route('klanten.index')->with('success', 'Klant succesvol verwijderd via Stored Procedure.');
         } catch (\Illuminate\Database\QueryException $e) {
             if ($e->getCode() == '45000' || str_contains($e->getMessage(), '1644')) {
-                // Extract message from SIGNAL
                 $errorMessage = $e->getPrevious() ? $e->getPrevious()->getMessage() : $e->getMessage();
-                if (preg_match("/1644\s+(.*)/i", $errorMessage, $matches)) {
-                    $errorMessage = $matches[1];
-                }
+                if (preg_match("/1644\s+(.*)/i", $errorMessage, $matches)) { $errorMessage = $matches[1]; }
                 return back()->with('error', $errorMessage);
             }
             Log::error('Databasefout bij verwijderen klant: ' . $e->getMessage());
-            return back()->with('error', 'Databasefout: Actie geweigerd door systeemregels of actieve koppelingen.');
+            return back()->with('error', 'Systeemfout: Klant kan niet worden verwijderd (mogelijk nog actieve koppelingen).');
         } catch (\Exception $e) {
             Log::error('Fout bij verwijderen van klant: ' . $e->getMessage());
-            return back()->with('error', 'Er is een fout opgetreden bij het verwijderen.');
+            return back()->with('error', 'Er is een onverwachte fout opgetreden.');
         }
     }
 }

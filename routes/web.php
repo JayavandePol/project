@@ -25,7 +25,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/klanten/{id}', [App\Http\Controllers\KlantController::class, 'destroy'])->name('klanten.destroy');
 
     Route::get('/reizen', [App\Http\Controllers\ReisController::class, 'index'])->name('reizen.index');
-    // ...
+    Route::get('/reizen/create', [App\Http\Controllers\ReisController::class, 'create'])->name('reizen.create');
+    Route::post('/reizen', [App\Http\Controllers\ReisController::class, 'store'])->name('reizen.store');
+    Route::get('/reizen/{id}/edit', [App\Http\Controllers\ReisController::class, 'edit'])->name('reizen.edit');
+    Route::put('/reizen/{id}', [App\Http\Controllers\ReisController::class, 'update'])->name('reizen.update');
     Route::delete('/reizen/{id}', [App\Http\Controllers\ReisController::class, 'destroy'])->name('reizen.destroy');
 
     Route::get('/accommodaties', [App\Http\Controllers\AccommodatieController::class, 'index'])->name('accommodaties.index');
@@ -43,7 +46,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/boekingen/{id}', [App\Http\Controllers\BoekingController::class, 'destroy'])->name('boekingen.destroy');
 
     Route::get('/facturen', [App\Http\Controllers\FactuurController::class, 'index'])->name('facturen.index');
-    Route::patch('/facturen/{id}/status', [App\Http\Controllers\FactuurController::class, 'updateStatus'])->name('facturen.updateStatus');
+    Route::get('/facturen/create', [App\Http\Controllers\FactuurController::class, 'create'])->name('facturen.create');
+    Route::post('/facturen', [App\Http\Controllers\FactuurController::class, 'store'])->name('facturen.store');
+    Route::get('/facturen/{id}/edit', [App\Http\Controllers\FactuurController::class, 'edit'])->name('facturen.edit');
+    Route::put('/facturen/{id}', [App\Http\Controllers\FactuurController::class, 'update'])->name('facturen.update');
     Route::delete('/facturen/{id}', [App\Http\Controllers\FactuurController::class, 'destroy'])->name('facturen.destroy');
 });
 
