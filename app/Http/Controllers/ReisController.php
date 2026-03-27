@@ -91,12 +91,13 @@ class ReisController extends Controller
             DB::statement("CALL DeleteReis(?)", [$id]);
             return redirect()->route('reizen.index')->with('success', 'Reis succesvol verwijderd via Stored Procedure.');
         } catch (\Illuminate\Database\QueryException $e) {
-            $errorCode = $e->errorInfo[1] ?? null;
-            if ($errorCode == 1644) {
-                return back()->with('error', $e->errorInfo[2]);
+            if ($e->getCode() == '45000' || str_contains($e->getMessage(), '1644')) {
+                $errorMessage = $e->getPrevious() ? $e->getPrevious()->getMessage() : $e->getMessage();
+                if (preg_match("/1644\s+(.*)/i", $errorMessage, $matches)) { $errorMessage = $matches[1]; }
+                return back()->with('error', $errorMessage);
             }
-            Log::error('Fout bij verwijderen van reis: ' . $e->getMessage());
-            return back()->with('error', 'Er is een fout opgetreden bij het verwijderen.');
+            Log::error('Fout bij verwijderen van reis (Database): ' . $e->getMessage());
+            return back()->with('error', 'Systeemfout: Reis kan niet worden verwijderd (mogelijk nog actieve koppelingen).');
         } catch (\Exception $e) {
             Log::error('Onverwachte fout bij verwijderen: ' . $e->getMessage());
             return back()->with('error', 'Er is een onverwachte fout opgetreden.');

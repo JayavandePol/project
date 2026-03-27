@@ -15,8 +15,6 @@
 
     <div class="max-w-3xl mx-auto py-8">
         @php 
-            $invoice = DB::table('facturen')->where('boeking_id', $boeking->id)->first();
-            $reis = DB::table('reizen')->where('id', $boeking->reis_id)->first();
             $isPaid = $invoice && $invoice->status === 'paid';
             $isExpired = $reis && \Carbon\Carbon::parse($reis->start_date)->isPast();
             $isLocked = $isPaid || $isExpired;
