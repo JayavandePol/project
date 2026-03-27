@@ -46,7 +46,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/boekingen/{id}', [App\Http\Controllers\BoekingController::class, 'destroy'])->name('boekingen.destroy');
 
     Route::get('/facturen', [App\Http\Controllers\FactuurController::class, 'index'])->name('facturen.index');
-    Route::patch('/facturen/{id}/status', [App\Http\Controllers\FactuurController::class, 'updateStatus'])->name('facturen.updateStatus');
+    Route::get('/facturen/create', [App\Http\Controllers\FactuurController::class, 'create'])->name('facturen.create');
+    Route::post('/facturen', [App\Http\Controllers\FactuurController::class, 'store'])->name('facturen.store');
+    Route::get('/facturen/{id}/edit', [App\Http\Controllers\FactuurController::class, 'edit'])->name('facturen.edit');
+    Route::put('/facturen/{id}', [App\Http\Controllers\FactuurController::class, 'update'])->name('facturen.update');
     Route::delete('/facturen/{id}', [App\Http\Controllers\FactuurController::class, 'destroy'])->name('facturen.destroy');
 });
 
